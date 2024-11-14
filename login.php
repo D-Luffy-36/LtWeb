@@ -4,7 +4,7 @@ if (isset($_POST['email']) && isset($_POST['password']) && $_POST['email'] !== "
     $email = htmlspecialchars($_POST['email']);  // Lấy giá trị của email
     $password = htmlspecialchars($_POST['password']);
 
-    $sql = "SELECT email, role, avatar FROM accounts WHERE email = '$email' AND password = '$password'";
+    $sql = "SELECT id, email, role, avatar FROM accounts WHERE email = '$email' AND password = '$password'";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
@@ -16,7 +16,7 @@ if (isset($_POST['email']) && isset($_POST['password']) && $_POST['email'] !== "
         }
         session_start();
         $_SESSION['authenticate'] = true;
-        $_SESSION['email'] = $allRows[0]['email'];
+        $_SESSION['id'] = $allRows[0]['id'];
         $_SESSION['role'] = $allRows[0]['role'];
         include "session.php";
         echo '<script type="text/javascript">alert("Login Succses");</script>';
