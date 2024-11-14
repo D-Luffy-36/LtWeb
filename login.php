@@ -10,6 +10,7 @@ if (isset($_POST['email']) && isset($_POST['password']) && $_POST['email'] !== "
     if ($result->num_rows > 0) {
         // login succcess
         // create sessions
+        // đọc từng bản ghi thành mảng assoc
         while ($row = $result->fetch_assoc()) {
             $allRows[] = $row;
         }
