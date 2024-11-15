@@ -1,9 +1,51 @@
+<?php
+session_start();
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
+
+// Thêm sản phẩm vào giỏ hàng
+if (isset($_POST['action']) && $_POST['action'] === 'addToCart' && isset($_POST['productId'])) {
+    $productId = htmlspecialchars($_POST['productId']);
+    $productName = htmlspecialchars($_POST['productName']);
+    $productPrice = htmlspecialchars($_POST['productPrice']);
+    $productImg = htmlspecialchars($_POST['productImg']);
+
+    // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+    if (!isset($_SESSION['cart'][$productId])) {
+        $_SESSION['cart'][$productId] = [
+            'name' => $productName,
+            'img' => $productImg,
+            'price' => $productPrice,
+            'quantity' => 1
+        ];
+    } else {
+        // Tăng số lượng nếu sản phẩm đã tồn tại
+        $_SESSION['cart'][$productId]['quantity']++;
+    }
+    // Chuyển mảng thành chuỗi JSON và in ra console
+    $cart = json_encode($_SESSION['cart']);
+    var_dump($_SESSION['cart']);
+}
+
+// Xóa sản phẩm khỏi giỏ hàng
+if (isset($_POST['action']) && $_POST['action'] === 'remove' && isset($_POST['productId'])) {
+    $productId = htmlspecialchars($_POST['productId']);
+    unset($_SESSION['cart'][$productId]);
+
+    // Chuyển mảng thành chuỗi JSON và in ra console sau khi xóa
+    $cart = json_encode($_SESSION['cart']);
+    echo "<script>console.log('Cart after removal:', $cart);</script>";
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
-    <title>Fruitables - Vegetable Website Template</title>
+    <title>Cart</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -30,12 +72,7 @@
 </head>
 
 <body>
-
-
-
-
     <?php include("./layout/hearder.php") ?>
-
 
     <!-- Modal Search Start -->
     <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -68,7 +105,6 @@
     </div>
     <!-- Single Page Header End -->
 
-
     <!-- Cart Page Start -->
     <div class="container-fluid py-5">
         <div class="container py-5">
@@ -85,115 +121,49 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row">
-                                <div class="d-flex align-items-center">
-                                    <img src="img/vegetable-item-3.png" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
-                                </div>
-                            </th>
-                            <td>
-                                <p class="mb-0 mt-4">Big Banana</p>
-                            </td>
-                            <td>
-                                <p class="mb-0 mt-4">2.99 $</p>
-                            </td>
-                            <td>
-                                <div class="input-group quantity mt-4" style="width: 100px;">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                            <i class="fa fa-minus"></i>
-                                        </button>
+                        <?php foreach ($_SESSION['cart'] as $productId => $product): ?>
+                            <tr>
+                                <th scope="row">
+                                    <div class="d-flex align-items-center">
+                                        <img src="img/<?php echo $product['img'] ?>" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
                                     </div>
-                                    <input type="text" class="form-control form-control-sm text-center border-0" value="1">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="mb-0 mt-4">2.99 $</p>
-                            </td>
-                            <td>
-                                <button class="btn btn-md rounded-circle bg-light border mt-4">
-                                    <i class="fa fa-times text-danger"></i>
-                                </button>
-                            </td>
+                                </th>
+                                <td>
+                                    <p class="mb-0 mt-4"><?php echo $product['name']  ?> </p>
+                                </td>
+                                <td>
+                                    <p class="mb-0 mt-4"><?php echo $product['price'] ?> $ </p>
+                                </td>
+                                <td>
+                                    <div class="input-group quantity mt-4" style="width: 100px;">
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-sm btn-minus rounded-circle bg-light border">
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                        </div>
+                                        <input type="text" class="form-control form-control-sm text-center border-0" value="<?php echo $product['quantity']  ?>">
 
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                <div class="d-flex align-items-center">
-                                    <img src="img/vegetable-item-5.jpg" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="" alt="">
-                                </div>
-                            </th>
-                            <td>
-                                <p class="mb-0 mt-4">Potatoes</p>
-                            </td>
-                            <td>
-                                <p class="mb-0 mt-4">2.99 $</p>
-                            </td>
-                            <td>
-                                <div class="input-group quantity mt-4" style="width: 100px;">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                            <i class="fa fa-minus"></i>
-                                        </button>
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
                                     </div>
-                                    <input type="text" class="form-control form-control-sm text-center border-0" value="1">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                            <i class="fa fa-plus"></i>
+                                </td>
+                                <td>
+                                    <p class="mb-0 mt-4"> <?php echo $product['price'] * $product['quantity']  ?> $</p>
+                                </td>
+                                <td>
+                                    <form action="cart.php" method="POST">
+                                        <input type="hidden" name="action" value="remove">
+                                        <input type="hidden" name="productId" value="<?php echo $productId ?>">
+                                        <button class="btn btn-md rounded-circle bg-light border mt-4 remove-item">
+                                            <i class="fa fa-times text-danger"></i>
                                         </button>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="mb-0 mt-4">2.99 $</p>
-                            </td>
-                            <td>
-                                <button class="btn btn-md rounded-circle bg-light border mt-4">
-                                    <i class="fa fa-times text-danger"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                <div class="d-flex align-items-center">
-                                    <img src="img/vegetable-item-2.jpg" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="" alt="">
-                                </div>
-                            </th>
-                            <td>
-                                <p class="mb-0 mt-4">Awesome Brocoli</p>
-                            </td>
-                            <td>
-                                <p class="mb-0 mt-4">2.99 $</p>
-                            </td>
-                            <td>
-                                <div class="input-group quantity mt-4" style="width: 100px;">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                            <i class="fa fa-minus"></i>
-                                        </button>
-                                    </div>
-                                    <input type="text" class="form-control form-control-sm text-center border-0" value="1">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="mb-0 mt-4">2.99 $</p>
-                            </td>
-                            <td>
-                                <button class="btn btn-md rounded-circle bg-light border mt-4">
-                                    <i class="fa fa-times text-danger"></i>
-                                </button>
-                            </td>
-                        </tr>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
@@ -340,6 +310,8 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script src="js/custom.js"></script>
+
 </body>
 
 </html>

@@ -26,7 +26,7 @@ if (isset($_POST['email']) && isset($_POST['password']) && $_POST['email'] !== "
         echo '<script type="text/javascript">alert("Not Founds");</script>';
     }
 } else {
-    echo '<script type="text/javascript">alert("Email hoặc PassWord chưa đúng chưa đúng.");</script>';
+    echo '<script type="text/javascript">alert("PLease Enter Email And Password.");</script>';
 }
 // session_start();
 // $_SESSION['authenticate'] = true;

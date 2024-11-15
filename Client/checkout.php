@@ -1,3 +1,40 @@
+<?php
+session_start();
+
+// Function tính tổng tiền của giỏ hàng
+function calculateCartTotal()
+{
+    // Kiểm tra nếu giỏ hàng có tồn tại và có sản phẩm
+    if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+        $total = 0;
+
+        // Duyệt qua từng sản phẩm trong giỏ hàng
+        foreach ($_SESSION['cart'] as $item) {
+            // Tính tổng tiền của sản phẩm (price * quantity)
+            $total += $item['price'] * $item['quantity'];
+        }
+
+        return number_format($total, 7); // Định dạng kết quả với 7 chữ số thập phân
+    } else {
+        return 0; // Nếu giỏ hàng rỗng, trả về 0
+    }
+}
+
+function customFormatNumber($number)
+{
+    // Tách phần nguyên và phần thập phân
+    $parts = explode('.', number_format($number, 3, '.', ''));
+
+    // Định dạng phần nguyên với dấu phẩy (`,`) cho hàng ngàn
+    $integerPart = number_format((int)$parts[0], 0, '', ',');
+
+    // Gắn phần nguyên và phần thập phân lại với dấu `.`
+    return $integerPart . '.' . $parts[1];
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,7 +67,6 @@
 </head>
 
 <body>
-
 
     <?php include("./layout/hearder.php") ?>
 
@@ -142,39 +178,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <th scope="row">
-                                            <div class="d-flex align-items-center mt-2">
-                                                <img src="img/vegetable-item-2.jpg" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="">
-                                            </div>
-                                        </th>
-                                        <td class="py-5">Awesome Brocoli</td>
-                                        <td class="py-5">$69.00</td>
-                                        <td class="py-5">2</td>
-                                        <td class="py-5">$138.00</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">
-                                            <div class="d-flex align-items-center mt-2">
-                                                <img src="img/vegetable-item-5.jpg" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="">
-                                            </div>
-                                        </th>
-                                        <td class="py-5">Potatoes</td>
-                                        <td class="py-5">$69.00</td>
-                                        <td class="py-5">2</td>
-                                        <td class="py-5">$138.00</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">
-                                            <div class="d-flex align-items-center mt-2">
-                                                <img src="img/vegetable-item-3.png" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="">
-                                            </div>
-                                        </th>
-                                        <td class="py-5">Big Banana</td>
-                                        <td class="py-5">$69.00</td>
-                                        <td class="py-5">2</td>
-                                        <td class="py-5">$138.00</td>
-                                    </tr>
+                                    <?php foreach ($_SESSION['cart'] as $productId => $product): ?>
+                                        <tr>
+                                            <th scope="row">
+                                                <div class="d-flex align-items-center mt-2">
+                                                    <img src="img/<?php echo $product['img']  ?>" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="">
+                                                </div>
+                                            </th>
+                                            <td class="py-5"><?php echo $product['name']  ?></td>
+                                            <td class="py-5">$<?php echo $product['price'] ?></td>
+                                            <td class="py-5"><?php echo $product['quantity'] ?></td>
+                                            <td class="py-5">$<?php echo $product['quantity'] * $product['price']  ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+
                                     <tr>
                                         <th scope="row">
                                         </th>
@@ -185,7 +202,7 @@
                                         </td>
                                         <td class="py-5">
                                             <div class="py-3 border-bottom border-top">
-                                                <p class="mb-0 text-dark">$414.00</p>
+                                                <p class="mb-0 text-dark">$<?php echo customFormatNumber(calculateCartTotal()); ?></p>
                                             </div>
                                         </td>
                                     </tr>
