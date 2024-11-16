@@ -1,37 +1,18 @@
 <?php
 require  'connectDB.php';
+require 'function.php';
 if (isset($_POST['email']) && isset($_POST['password']) && $_POST['email'] !== "" && $_POST['password'] !== "") {
-    $email = htmlspecialchars($_POST['email']);  // Lấy giá trị của email
-    $password = htmlspecialchars($_POST['password']);
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-    $sql = "SELECT id, email, role, avatar FROM accounts WHERE email = '$email' AND password = '$password'";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        // login succcess
-        // create sessions
-        // đọc từng bản ghi thành mảng assoc
-        while ($row = $result->fetch_assoc()) {
-            $allRows[] = $row;
-        }
-        session_start();
-        $_SESSION['authenticate'] = true;
-        $_SESSION['id'] = $allRows[0]['id'];
-        $_SESSION['role'] = $allRows[0]['role'];
-        include "session.php";
-        echo '<script type="text/javascript">alert("Login Succses");</script>';
-
-        print_r($allRows);
+    $auth = login($email, $password, $conn);
+    if ($auth == true) {
+        echo '<script>alert("Login SuccessFully")</script>';
+        session();
     } else {
-        echo '<script type="text/javascript">alert("Not Founds");</script>';
+        echo '<script>alert("Login Failed")</script>';
     }
-} else {
-    echo '<script type="text/javascript">alert("PLease Enter Email And Password.");</script>';
 }
-// session_start();
-// $_SESSION['authenticate'] = true;
-// $_SESSION['email'] = 'anPham@gmail.com';
-// $_SESSION['role'] = 'admin';
 ?>
 
 

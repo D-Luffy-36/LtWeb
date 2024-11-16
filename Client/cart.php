@@ -14,6 +14,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'addToCart' && isset($_POST[
     // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
     if (!isset($_SESSION['cart'][$productId])) {
         $_SESSION['cart'][$productId] = [
+            'id' => $productId,
             'name' => $productName,
             'img' => $productImg,
             'price' => $productPrice,
