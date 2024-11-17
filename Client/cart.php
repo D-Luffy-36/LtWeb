@@ -29,6 +29,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'addToCart' && isset($_POST[
     var_dump($_SESSION['cart']);
 }
 
+
 // Xóa sản phẩm khỏi giỏ hàng
 if (isset($_POST['action']) && $_POST['action'] === 'remove' && isset($_POST['productId'])) {
     $productId = htmlspecialchars($_POST['productId']);
@@ -122,6 +123,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'remove' && isset($_POST['pr
                         </tr>
                     </thead>
                     <tbody>
+
                         <?php foreach ($_SESSION['cart'] as $productId => $product): ?>
                             <tr>
                                 <th scope="row">
@@ -180,20 +182,20 @@ if (isset($_POST['action']) && $_POST['action'] === 'remove' && isset($_POST['pr
                             <h1 class="display-6 mb-4">Cart <span class="fw-normal">Total</span></h1>
                             <div class="d-flex justify-content-between mb-4">
                                 <h5 class="mb-0 me-4">Subtotal:</h5>
-                                <p class="mb-0">$96.00</p>
+                                <p class="mb-0"></p>
                             </div>
-                            <div class="d-flex justify-content-between">
+                            <!-- <div class="d-flex justify-content-between">
                                 <h5 class="mb-0 me-4">Shipping</h5>
                                 <div class="">
                                     <p class="mb-0">Flat rate: $3.00</p>
                                 </div>
                             </div>
-                            <p class="mb-0 text-end">Shipping to Ukraine.</p>
+                            <p class="mb-0 text-end">Shipping to Ukraine.</p> -->
                         </div>
-                        <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
+                        <!-- <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
                             <h5 class="mb-0 ps-4 me-4">Total</h5>
                             <p class="mb-0 pe-4">$99.00</p>
-                        </div>
+                        </div> -->
                         <!-- <button >Proceed Checkout</button> -->
                         <a href="checkout.php" class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Checkout</a>
                     </div>

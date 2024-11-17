@@ -1,6 +1,7 @@
 <?php
+require "../connectDB.php";
 session_start();
-require '../connectDB.php';
+
 if (!isset($_SESSION['account']['id'])) {
     echo '<script>alert("Please Login")</script>';
     header('Location: ../login.php');
@@ -38,52 +39,57 @@ function customFormatNumber($number)
     return $integerPart . '.' . $parts[1];
 }
 
-if (isset($_POST['confirmOrder']) && $_POST['confirmOrder'] === 'true') {
 
-    if (isset($_POST['price'])) {
-        $price = htmlspecialchars($_POST['price']);
-        echo "<script>console.log('price',  $price );</script>";
-    }
+if (isset($_POST['price']) && isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
+
+    $price = floatval(htmlspecialchars($_POST['price']));
+    echo "<script>console.log('price',  $price );</script>";
 
     if (isset($_SESSION['account']['id'])) {
         $accountId = $_SESSION['account']['id'];
         echo "<script>console.log('account id: ',$accountId);</script>";
     }
-
-    $orderDate = date('Y-m-d');
+    date_default_timezone_set('Asia/Ho_Chi_Minh'); // Thiết lập múi giờ Việt Nam
+    $orderDate = date('Y-m-d H:i:s');
     $status = 0;
+
     $sql = "INSERT INTO orders (status, price, date, account_id) 
                 VALUES ('$status', '$price ', '$orderDate', '$accountId')";
 
-    if ($conn->query($sql) === TRUE) {
+    echo "<script>console.log($sql);</script>";
+    echo "<script>console.log($orderDate);</script>";
+
+    if ($conn->query($sql) === true) {
         $orderId = $conn->insert_id;
         // Thêm các sản phẩm vào bảng order_fruitable
         foreach ($_SESSION['cart'] as $productId => $product) {
-            $quantity = $product['quantity'];
-            $total = $quantity * $product['price'];
+            $quantity = intval($product['quantity']);
+            $price = floatval($product['price']);
+            $total = $quantity * $price;
+            error_log("Quantity: $quantity, Total: $total");
+
+            if (!is_numeric($quantity) || !is_numeric($total) || $quantity <= 0 || $total < 0) {
+                error_log("Invalid data for quantity or total: Quantity = $quantity, Total = $total");
+                continue;
+            }
 
             // Thêm sản phẩm vào bảng order_fruitable
             $sqlOrderFruit = "INSERT INTO order_fruitable (order_id, fruitable_id, quantity, total) 
                               VALUES ('$orderId', '$productId', '$quantity', '$total')";
 
             // Thực thi câu lệnh chèn sản phẩm
-            if ($conn->query($sqlOrderFruit) === FALSE) {
-                echo "Error: " . $conn->error;
-            }
-
-            // Thực thi câu lệnh chèn sản phẩm
-            if ($conn->query($sqlOrderFruit) === FALSE) {
+            if ($conn->query($sqlOrderFruit) === false) {
                 echo "Error: " . $conn->error;
             }
         }
         unset($_SESSION['cart']);
         // Chuyển hướng người dùng đến trang cảm ơn hoặc trang chi tiết đơn hàng
-        echo "<script>alert('ok!!!!')</script>";
+        echo "<script>alert('SuccessFully')</script>";
         // header('Location: orders.php');
-        // exit();
+        exit();
+    } else {
+        echo "<script>alert('error')</script>";
     }
-} else {
-    echo '<script>alert("Failed")</script>';
 }
 
 ?>
@@ -246,7 +252,6 @@ if (isset($_POST['confirmOrder']) && $_POST['confirmOrder'] === 'true') {
                                         <td class="py-5">$<?php echo $product['quantity'] * $product['price']  ?></td>
                                     </tr>
                                 <?php endforeach; ?>
-
                                 <tr>
                                     <th scope="row">
                                     </th>

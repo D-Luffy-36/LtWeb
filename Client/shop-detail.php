@@ -66,7 +66,6 @@ if ($result->num_rows > 0) {
 
 <body>
 
-
     <?php include("./layout/hearder.php") ?>
 
     <!-- Modal Search Start -->
