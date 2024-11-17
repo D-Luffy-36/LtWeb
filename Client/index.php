@@ -7,7 +7,7 @@ include '../connectDB.php';
 
 <head>
     <meta charset="utf-8">
-    <title>Fruitables - Vegetable Website Template</title>
+    <title>Fruitables - Vegetable Website </title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -32,6 +32,8 @@ include '../connectDB.php';
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <script src="./js/custom.js"></script>
+
 
 </head>
 
@@ -805,7 +807,6 @@ include '../connectDB.php';
     <!-- Template Javascript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="./js/main.js"></script>
-    <script src="./js/custom.js"></script>
 
 </body>
 

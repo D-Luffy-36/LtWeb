@@ -145,13 +145,6 @@
         button.parent().parent().find('input').val(newVal);
     });
 
-    // All products button click
-    $(document).ready(function () {
-        $('.all-products').on('click', function () {
-            alert("Button clicked!");
-        });
-    });
-
 })(jQuery)
 
 

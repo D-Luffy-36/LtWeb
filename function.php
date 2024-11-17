@@ -47,7 +47,7 @@ function login($email, $password, $conn)
 function session()
 {
     if (!isset($_SESSION['account']['email'])) {
-        header("Location: login.php");
+        header("Location: http://localhost/LtWeb/login.php");
         exit();
     } else {
         if ($_SESSION['account']['role'] === 'customer') {

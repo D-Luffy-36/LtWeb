@@ -43,6 +43,7 @@ session_start();
                             <a href="cart.php" class="dropdown-item">Cart</a>
                             <a href="checkout.php" class="dropdown-item">Chackout</a>
                             <a href="testimonial.php" class="dropdown-item">Testimonial</a>
+                            <a href="order.php" class="dropdown-item">orders</a>
                             <a href="404.php" class="dropdown-item">404 Page</a>
                         </div>
                     </div>

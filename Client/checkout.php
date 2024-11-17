@@ -85,7 +85,7 @@ if (isset($_POST['price']) && isset($_SESSION['cart']) && count($_SESSION['cart'
         unset($_SESSION['cart']);
         // Chuyển hướng người dùng đến trang cảm ơn hoặc trang chi tiết đơn hàng
         echo "<script>alert('SuccessFully')</script>";
-        // header('Location: orders.php');
+        header('Location: order.php');
         exit();
     } else {
         echo "<script>alert('error')</script>";
@@ -93,8 +93,6 @@ if (isset($_POST['price']) && isset($_SESSION['cart']) && count($_SESSION['cart'
 }
 
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -239,19 +237,27 @@ if (isset($_POST['price']) && isset($_SESSION['cart']) && count($_SESSION['cart'
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($_SESSION['cart'] as $productId => $product): ?>
-                                    <tr>
-                                        <th scope="row">
-                                            <div class="d-flex align-items-center mt-2">
-                                                <img src="img/<?php echo $product['img']  ?>" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="">
-                                            </div>
-                                        </th>
-                                        <td class="py-5"><?php echo $product['name']  ?></td>
-                                        <td class="py-5">$<?php echo $product['price'] ?></td>
-                                        <td class="py-5"><?php echo $product['quantity'] ?></td>
-                                        <td class="py-5">$<?php echo $product['quantity'] * $product['price']  ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
+                                <?php
+                                if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
+                                    echo '<script>alert("Empty Card");</script>';
+                                } else {
+                                    foreach ($_SESSION['cart'] as $productId => $product): ?>
+                                        <tr>
+                                            <th scope="row">
+                                                <div class="d-flex align-items-center mt-2">
+                                                    <img src="img/<?php echo $product['img']; ?>" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="">
+                                                </div>
+                                            </th>
+                                            <td class="py-5"><?php echo $product['name']; ?></td>
+                                            <td class="py-5">$<?php echo $product['price']; ?></td>
+                                            <td class="py-5"><?php echo $product['quantity']; ?></td>
+                                            <td class="py-5">$<?php echo $product['quantity'] * $product['price']; ?></td>
+                                        </tr>
+                                <?php endforeach;
+                                }
+                                ?>
+                                ?>
+
                                 <tr>
                                     <th scope="row">
                                     </th>

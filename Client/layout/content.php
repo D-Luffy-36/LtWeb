@@ -8,7 +8,7 @@
                 <div class="col-lg-8 text-end">
                     <ul class="nav nav-pills d-inline-flex text-center mb-5">
                         <li class="nav-item">
-                            <a class="d-flex m-2 py-2 bg-light rounded-pill active all-products" href="?productType=all">
+                            <a class="d-flex m-2 py-2 bg-light rounded-pill all-products" href="?productType=all">
                                 <span class="text-dark" style="width: 130px;">All Products</span>
                             </a>
                         </li>
